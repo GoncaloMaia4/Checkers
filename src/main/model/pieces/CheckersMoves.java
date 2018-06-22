@@ -1,5 +1,4 @@
-package main.model;
-
+package model.pieces;
 
 public class CheckersMoves {
     // Original position.

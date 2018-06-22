@@ -1,15 +1,16 @@
-package main.model;
+package model;
+
+import model.pieces.CheckersMoves;
+import model.pieces.Pieces;
 
 import java.util.ArrayList;
 
 public class Board {
 
-    //Possible contents on tile
-    public static final int EMPTY = 0, RED = 1, RED_QUEEN = 2, BLACK = 3,
-            BLACK_QUEEN = 4;
+    private static final int RED_PLAYER = Pieces.RED.getPieceValue();
+    private static final int BLACK_PLAYER = Pieces.BLACK.getPieceValue();
 
     private int[][] board;
-
     public Board() {
         board = new int[8][8];
     }
@@ -19,13 +20,9 @@ public class Board {
             for (int col = 0; col < 8; col++) {
                 if (row % 2 == col % 2) {
                     if (row < 3)
-                        board[row][col] = BLACK;
+                        board[row][col] = BLACK_PLAYER;
                     else if (row > 4)
-                        board[row][col] = RED;
-                    else
-                        board[row][col] = EMPTY;
-                } else {
-                    board[row][col] = EMPTY;
+                        board[row][col] = RED_PLAYER;
                 }
             }
         }
@@ -42,26 +39,26 @@ public class Board {
         int fromRow = move.fromRow;
         int fromCol = move.fromCol;
         board[toRow][toCol] = board[fromRow][fromCol];
-        board[fromRow][fromCol] = EMPTY;
+        board[fromRow][fromCol] = Pieces.EMPTY.getPieceValue();
         if (fromRow - toRow == 2 || fromRow - toRow == -2) {
             //Obtain jumped piece coordinates and make it empty
             int jumpRow = (fromRow + toRow) / 2;
             int jumpCol = (fromCol + toCol) / 2;
-            board[jumpRow][jumpCol] = EMPTY;
+            board[jumpRow][jumpCol] = Pieces.EMPTY.getPieceValue();
         }
         //Check if Queen
-        if (toRow == 0 && board[toRow][toCol] == RED)
-            board[toRow][toCol] = RED_QUEEN;
-        if (toRow == 7 && board[toRow][toCol] == BLACK)
-            board[toRow][toCol] = BLACK_QUEEN;
+        if (toRow == 0 && board[toRow][toCol] == RED_PLAYER)
+            board[toRow][toCol] = Pieces.RED_QUEEN.getPieceValue();
+        if (toRow == 7 && board[toRow][toCol] == BLACK_PLAYER)
+            board[toRow][toCol] = Pieces.BLACK_QUEEN.getPieceValue();
     }
 
     public CheckersMoves[] getMoves(int player) {
         int playerQueen;
-        if (player == BLACK) {
-            playerQueen = BLACK_QUEEN;
+        if (player == BLACK_PLAYER) {
+            playerQueen = Pieces.BLACK_QUEEN.getPieceValue();
         } else {
-            playerQueen = RED_QUEEN;
+            playerQueen = Pieces.RED_QUEEN.getPieceValue();
         }
 
         ArrayList<CheckersMoves> moves = new ArrayList<>();
@@ -130,10 +127,10 @@ public class Board {
 
     public CheckersMoves[] getJumpsFrom(int player, int row, int col) {
         int playerQueen = player;
-        if (player == BLACK) {
-            playerQueen = BLACK_QUEEN;
-        } else if (player == RED) {
-            playerQueen = RED_QUEEN;
+        if (player == BLACK_PLAYER) {
+            playerQueen = Pieces.BLACK_QUEEN.getPieceValue();
+        } else if (player == RED_PLAYER) {
+            playerQueen = Pieces.RED_QUEEN.getPieceValue();
         }
 
         ArrayList<CheckersMoves> jumps = new ArrayList<>();
@@ -158,19 +155,19 @@ public class Board {
     private boolean checkJump(int player, int r1, int c1, int r2, int c2, int r3,
                               int c3) {
         //Check limits and contents
-        if (r3 < 0 || r3 >= 8 || c3 < 0 || c3 >= 8 || board[r3][c3] != EMPTY)
+        if (r3 < 0 || r3 >= 8 || c3 < 0 || c3 >= 8 || board[r3][c3] != Pieces.EMPTY.getPieceValue())
             return false;
 
-        if (player == RED) {
-            if (board[r2][c2] != BLACK && board[r2][c2] != BLACK_QUEEN)
+        if (player == RED_PLAYER) {
+            if (board[r2][c2] != BLACK_PLAYER && board[r2][c2] != Pieces.BLACK_QUEEN.getPieceValue())
                 return false;
-            if (board[r1][c1] == RED && r3 > r1)
+            if (board[r1][c1] == RED_PLAYER && r3 > r1)
                 return false;
             return true;
         } else {
-            if (board[r2][c2] != RED && board[r2][c2] != RED_QUEEN)
+            if (board[r2][c2] != RED_PLAYER && board[r2][c2] != Pieces.RED_QUEEN.getPieceValue())
                 return false;
-            if (board[r1][c1] == BLACK && r3 < r1)
+            if (board[r1][c1] == BLACK_PLAYER && r3 < r1)
                 return false;
             return true;
         }
@@ -179,15 +176,15 @@ public class Board {
 
     private boolean checkMove(int player, int r1, int c1, int r2, int c2) {
 
-        if (r2 < 0 || r2 >= 8 || c2 < 0 || c2 >= 8 || board[r2][c2] != EMPTY)
+        if (r2 < 0 || r2 >= 8 || c2 < 0 || c2 >= 8 || board[r2][c2] != Pieces.EMPTY.getPieceValue())
             return false;
 
-        if (player == RED) {
-            if (board[r1][c1] == RED && r2 > r1)
+        if (player == RED_PLAYER) {
+            if (board[r1][c1] == RED_PLAYER && r2 > r1)
                 return false;
             return true;
         } else {
-            if (board[r1][c1] == BLACK && r2 < r1)
+            if (board[r1][c1] == BLACK_PLAYER && r2 < r1)
                 return false;
             return true;
         }
