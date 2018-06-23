@@ -25,7 +25,7 @@ public class Game {
         board.setUp();
         currentPlayer = RED_PLAYER;
         legalMoves = board.getMoves(RED_PLAYER);
-        //Force row selected
+        //Force row selection
         rowSelected = -1;
         boardCanvas.newGame();
     }

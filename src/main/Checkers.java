@@ -10,10 +10,12 @@ public class Checkers extends JApplet {
         // create and set up the applet
         Checkers applet = new Checkers();
         JFrame mainFrame = new JFrame();
+        mainFrame.setSize(520, 250);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // add the applet to the frame and show it
         mainFrame.getContentPane().add(applet);
+        mainFrame.setResizable(false);
         mainFrame.setVisible(true);
 
         applet.init();
@@ -25,9 +27,7 @@ public class Checkers extends JApplet {
 
         Game game = new Game();
         BoardCanvas boardCanvas = game.getBoardCanvas();
-        this.setSize(500, 200);
         add(boardCanvas);
-
 
         boardCanvas.getNewGameButton().setBackground(Color.lightGray);
         add(boardCanvas.getNewGameButton());

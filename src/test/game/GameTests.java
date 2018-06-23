@@ -11,7 +11,6 @@ public class GameTests {
 
     private Game game;
 
-
     @Before
     public void setUp(){
         game = new Game();

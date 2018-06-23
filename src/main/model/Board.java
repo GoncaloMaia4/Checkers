@@ -11,6 +11,7 @@ public class Board {
     private static final int BLACK_PLAYER = Pieces.BLACK.getPieceValue();
 
     private int[][] board;
+
     public Board() {
         board = new int[8][8];
     }
@@ -19,10 +20,11 @@ public class Board {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if (row % 2 == col % 2) {
-                    if (row < 3)
+                    if (row < 3) {
                         board[row][col] = BLACK_PLAYER;
-                    else if (row > 4)
+                    } else if (row > 4) {
                         board[row][col] = RED_PLAYER;
+                    }
                 }
             }
         }
@@ -32,21 +34,27 @@ public class Board {
         return board[row][col];
     }
 
-
     public void makeMove(CheckersMoves move) {
         int toRow = move.toRow;
         int toCol = move.toCol;
         int fromRow = move.fromRow;
         int fromCol = move.fromCol;
+
         board[toRow][toCol] = board[fromRow][fromCol];
         board[fromRow][fromCol] = Pieces.EMPTY.getPieceValue();
+
         if (fromRow - toRow == 2 || fromRow - toRow == -2) {
             //Obtain jumped piece coordinates and make it empty
             int jumpRow = (fromRow + toRow) / 2;
             int jumpCol = (fromCol + toCol) / 2;
             board[jumpRow][jumpCol] = Pieces.EMPTY.getPieceValue();
         }
-        //Check if Queen
+
+        checkIfQueen(toRow, toCol);
+
+    }
+
+    private void checkIfQueen(int toRow, int toCol) {
         if (toRow == 0 && board[toRow][toCol] == RED_PLAYER)
             board[toRow][toCol] = Pieces.RED_QUEEN.getPieceValue();
         if (toRow == 7 && board[toRow][toCol] == BLACK_PLAYER)
@@ -54,30 +62,21 @@ public class Board {
     }
 
     public CheckersMoves[] getMoves(int player) {
-        int playerQueen;
-        if (player == BLACK_PLAYER) {
-            playerQueen = Pieces.BLACK_QUEEN.getPieceValue();
-        } else {
-            playerQueen = Pieces.RED_QUEEN.getPieceValue();
-        }
+        int playerQueen = getPlayerQueen(player);
 
-        ArrayList<CheckersMoves> moves = new ArrayList<>();
+        //Check if there is jumps
+        ArrayList<CheckersMoves> moves = getPossibleJumps(player, playerQueen);
 
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                if (board[row][col] == player || board[row][col] == playerQueen) {
-                    getJumps(player, playerQueen, row, col, moves);
-                }
-            }
-        }
-
+        //If there is no jumps, check possible moves
         if (moves.size() == 0) {
             moves = getMoves(player, playerQueen);
         }
 
+        //No moves, game over else return possible moves
         if (moves.size() == 0)
             return null;
         else {
+            //Transformation into array
             CheckersMoves[] movesArray = new CheckersMoves[moves.size()];
             int i = 0;
             for (CheckersMoves move : moves) {
@@ -86,6 +85,28 @@ public class Board {
             }
             return movesArray;
         }
+    }
+
+    private int getPlayerQueen(int player) {
+        int playerQueen;
+        if (player == BLACK_PLAYER) {
+            playerQueen = Pieces.BLACK_QUEEN.getPieceValue();
+        } else {
+            playerQueen = Pieces.RED_QUEEN.getPieceValue();
+        }
+        return playerQueen;
+    }
+
+    private ArrayList<CheckersMoves> getPossibleJumps(int player, int playerQueen) {
+        ArrayList<CheckersMoves> moves = new ArrayList<>();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                if (board[row][col] == player || board[row][col] == playerQueen) {
+                    getJumps(player, playerQueen, row, col, moves);
+                }
+            }
+        }
+        return moves;
     }
 
     private ArrayList<CheckersMoves> getMoves(int player, int playerQueen) {
@@ -126,18 +147,11 @@ public class Board {
     }
 
     public CheckersMoves[] getJumpsFrom(int player, int row, int col) {
-        int playerQueen = player;
-        if (player == BLACK_PLAYER) {
-            playerQueen = Pieces.BLACK_QUEEN.getPieceValue();
-        } else if (player == RED_PLAYER) {
-            playerQueen = Pieces.RED_QUEEN.getPieceValue();
-        }
+        int playerQueen = getPlayerQueen(player);
 
         ArrayList<CheckersMoves> jumps = new ArrayList<>();
 
-        if (board[row][col] == player || board[row][col] == playerQueen) {
-            getJumps(player, playerQueen, row, col, jumps);
-        }
+        getJumps(player, playerQueen, row, col, jumps);
 
         if (jumps.size() == 0) {
             return null;
@@ -189,6 +203,10 @@ public class Board {
             return true;
         }
 
+    }
+
+    public int[][] getBoard() {
+        return board;
     }
 
 }
