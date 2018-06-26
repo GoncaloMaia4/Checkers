@@ -24,7 +24,7 @@ public class Game {
     public void newGame() {
         board.setUp();
         currentPlayer = RED_PLAYER;
-        legalMoves = board.getMoves(RED_PLAYER);
+        legalMoves = board.getPossiblePlays(RED_PLAYER);
         //Force row selection
         rowSelected = -1;
         boardCanvas.newGame();
@@ -92,17 +92,15 @@ public class Game {
             }
         }
 
-        playMessage();
+        setNextRound();
 
-        //Reset row selected for next play
-        rowSelected = -1;
         boardCanvas.repaint();
     }
 
-    private void playMessage() {
+    private void setNextRound() {
         if (currentPlayer == RED_PLAYER) {
             currentPlayer = BLACK_PLAYER;
-            legalMoves = board.getMoves(currentPlayer);
+            legalMoves = board.getPossiblePlays(currentPlayer);
             if (legalMoves == null)
                 gameOver("RED wins.");
             else if (legalMoves[0].isJump())
@@ -111,7 +109,7 @@ public class Game {
                 boardCanvas.setMessageText("BLACK's move.");
         } else {
             currentPlayer = RED_PLAYER;
-            legalMoves = board.getMoves(currentPlayer);
+            legalMoves = board.getPossiblePlays(currentPlayer);
             if (legalMoves == null)
                 gameOver("BLACK wins.");
             else if (legalMoves[0].isJump())
@@ -119,6 +117,9 @@ public class Game {
             else
                 boardCanvas.setMessageText("RED's move.");
         }
+
+        //Reset row selected for next play
+        rowSelected = -1;
     }
 
     public int getPieceAt(int row, int col) {

@@ -1,13 +1,14 @@
 package game;
 
+import helper.CheckersTestHelper;
 import model.pieces.CheckersMoves;
 import model.pieces.Pieces;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-public class GameTests {
+public class GameTests extends CheckersTestHelper {
 
     private Game game;
 
@@ -22,7 +23,7 @@ public class GameTests {
         game.newGame();
         assertEquals(game.getCurrentPlayer(), Pieces.RED.getPieceValue());
         assertEquals(game.getRowSelected(), -1);
-        assertEquals(game.getLegalMoves().length, game.getBoard().getMoves(Pieces.RED.getPieceValue()).length);
+        assertEquals(game.getLegalMoves().length, game.getBoard().getPossiblePlays(Pieces.RED.getPieceValue()).length);
     }
 
     @Test
@@ -77,6 +78,18 @@ public class GameTests {
         game.makeMove(move);
         assertEquals(move.isJump(),true);
         assertEquals(game.getRowSelected(), -1);
+    }
+
+    @Test
+    public void testSetNextRound_1(){
+        game.setCurrentPlayer(Pieces.RED.getPieceValue());
+        emptyBoard(game.getBoard());
+        game.getBoard().getBoard()[7][7] = Pieces.BLACK.getPieceValue();
+
+        assertEquals(game.getBoardCanvas().getMessage().getText(), "RED wins.");
+        assertEquals(game.getCurrentPlayer(), Pieces.BLACK.getPieceValue());
+
+
     }
 
     //TODO add tests for when you are forced to jump and playMessage() method tests

@@ -61,7 +61,7 @@ public class Board {
             board[toRow][toCol] = Pieces.BLACK_QUEEN.getPieceValue();
     }
 
-    public CheckersMoves[] getMoves(int player) {
+    public CheckersMoves[] getPossiblePlays(int player) {
         int playerQueen = getPlayerQueen(player);
 
         //Check if there is jumps
@@ -102,14 +102,14 @@ public class Board {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if (board[row][col] == player || board[row][col] == playerQueen) {
-                    getJumps(player, playerQueen, row, col, moves);
+                    moves = getJumps(player, row, col);
                 }
             }
         }
         return moves;
     }
 
-    private ArrayList<CheckersMoves> getMoves(int player, int playerQueen) {
+    public ArrayList<CheckersMoves> getMoves(int player, int playerQueen) {
         ArrayList<CheckersMoves> moves = new ArrayList<>();
 
         for (int row = 0; row < 8; row++) {
@@ -134,7 +134,8 @@ public class Board {
     }
 
 
-    private void getJumps(int player, int playerQueen, int row, int col, ArrayList<CheckersMoves> jumps) {
+    public ArrayList<CheckersMoves>  getJumps(int player, int row, int col) {
+        ArrayList<CheckersMoves> jumps = new ArrayList<>();
 
         if (checkJump(player, row, col, row + 1, col + 1, row + 2, col + 2))
             jumps.add(new CheckersMoves(row, col, row + 2, col + 2));
@@ -144,14 +145,13 @@ public class Board {
             jumps.add(new CheckersMoves(row, col, row + 2, col - 2));
         if (checkJump(player, row, col, row - 1, col - 1, row - 2, col - 2))
             jumps.add(new CheckersMoves(row, col, row - 2, col - 2));
+
+        return jumps;
     }
 
     public CheckersMoves[] getJumpsFrom(int player, int row, int col) {
-        int playerQueen = getPlayerQueen(player);
 
-        ArrayList<CheckersMoves> jumps = new ArrayList<>();
-
-        getJumps(player, playerQueen, row, col, jumps);
+        ArrayList<CheckersMoves> jumps = getJumps(player, row, col);
 
         if (jumps.size() == 0) {
             return null;
@@ -193,6 +193,7 @@ public class Board {
         if (r2 < 0 || r2 >= 8 || c2 < 0 || c2 >= 8 || board[r2][c2] != Pieces.EMPTY.getPieceValue())
             return false;
 
+        //Check direction of movement
         if (player == RED_PLAYER) {
             if (board[r1][c1] == RED_PLAYER && r2 > r1)
                 return false;
