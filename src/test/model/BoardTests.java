@@ -1,6 +1,5 @@
 package model;
 
-import helper.CheckersTestHelper;
 import model.pieces.CheckersMoves;
 import model.pieces.Pieces;
 import org.junit.Before;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-public class BoardTests extends CheckersTestHelper {
+public class BoardTests {
 
     private Board board;
 
@@ -150,7 +149,7 @@ public class BoardTests extends CheckersTestHelper {
     @Test
     public void testGetMoves_1() {
         ArrayList<CheckersMoves> moves;
-        emptyBoard(board);
+        emptyBoard();
         board.getBoard()[5][5] = Pieces.RED.getPieceValue();
         board.getBoard()[6][6] = Pieces.BLACK.getPieceValue();
         board.getBoard()[4][6] = Pieces.BLACK.getPieceValue();
@@ -165,7 +164,7 @@ public class BoardTests extends CheckersTestHelper {
     @Test
     public void testGetMoves_2() {
         ArrayList<CheckersMoves> moves;
-        emptyBoard(board);
+        emptyBoard();
         board.getBoard()[5][5] = Pieces.RED.getPieceValue();
         board.getBoard()[6][6] = Pieces.EMPTY.getPieceValue();
         board.getBoard()[4][6] = Pieces.BLACK.getPieceValue();
@@ -181,7 +180,7 @@ public class BoardTests extends CheckersTestHelper {
     @Test
     public void testGetMoves_3() {
         ArrayList<CheckersMoves> moves;
-        emptyBoard(board);
+        emptyBoard();
         board.getBoard()[5][5] = Pieces.RED.getPieceValue();
         board.getBoard()[6][6] = Pieces.BLACK.getPieceValue();
         board.getBoard()[4][6] = Pieces.EMPTY.getPieceValue();
@@ -198,4 +197,11 @@ public class BoardTests extends CheckersTestHelper {
 
     }
 
+    private void emptyBoard() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                board.getBoard()[row][col] = Pieces.EMPTY.getPieceValue();
+            }
+        }
+    }
 }

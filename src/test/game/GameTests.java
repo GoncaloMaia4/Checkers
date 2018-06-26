@@ -1,6 +1,5 @@
 package game;
 
-import helper.CheckersTestHelper;
 import model.pieces.CheckersMoves;
 import model.pieces.Pieces;
 import org.junit.Before;
@@ -8,7 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class GameTests extends CheckersTestHelper {
+public class GameTests {
 
     private Game game;
 
@@ -81,17 +80,53 @@ public class GameTests extends CheckersTestHelper {
     }
 
     @Test
-    public void testSetNextRound_1(){
+    public void testPrepareNextRound_1(){
         game.setCurrentPlayer(Pieces.RED.getPieceValue());
-        emptyBoard(game.getBoard());
+        emptyBoard();
         game.getBoard().getBoard()[7][7] = Pieces.BLACK.getPieceValue();
+
+        game.prepareNextRound();
 
         assertEquals(game.getBoardCanvas().getMessage().getText(), "RED wins.");
         assertEquals(game.getCurrentPlayer(), Pieces.BLACK.getPieceValue());
 
+    }
+
+    @Test
+    public void testPrepareNextRound_2(){
+        game.setCurrentPlayer(Pieces.RED.getPieceValue());
+        emptyBoard();
+        game.getBoard().getBoard()[5][5] = Pieces.BLACK.getPieceValue();
+        game.getBoard().getBoard()[6][6] = Pieces.RED.getPieceValue();
+
+
+        game.prepareNextRound();
+
+        assertEquals(game.getBoardCanvas().getMessage().getText(), "BLACK must jump.");
+        assertEquals(game.getCurrentPlayer(), Pieces.BLACK.getPieceValue());
 
     }
 
+    @Test
+    public void testPrepareNextRound_3(){
+        game.setCurrentPlayer(Pieces.RED.getPieceValue());
+        emptyBoard();
+        game.getBoard().getBoard()[5][5] = Pieces.BLACK.getPieceValue();
+
+        game.prepareNextRound();
+
+        assertEquals(game.getBoardCanvas().getMessage().getText(), "BLACK's move.");
+        assertEquals(game.getCurrentPlayer(), Pieces.BLACK.getPieceValue());
+
+    }
+
+    private void emptyBoard() {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                game.getBoard().getBoard()[row][col] = Pieces.EMPTY.getPieceValue();
+            }
+        }
+    }
     //TODO add tests for when you are forced to jump and playMessage() method tests
 
 }

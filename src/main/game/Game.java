@@ -92,12 +92,11 @@ public class Game {
             }
         }
 
-        setNextRound();
+        prepareNextRound();
 
-        boardCanvas.repaint();
     }
 
-    private void setNextRound() {
+    public void prepareNextRound() {
         if (currentPlayer == RED_PLAYER) {
             currentPlayer = BLACK_PLAYER;
             legalMoves = board.getPossiblePlays(currentPlayer);
@@ -120,6 +119,7 @@ public class Game {
 
         //Reset row selected for next play
         rowSelected = -1;
+        boardCanvas.repaint();
     }
 
     public int getPieceAt(int row, int col) {
